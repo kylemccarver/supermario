@@ -1,8 +1,8 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-const int WINDOW_WIDTH = 512;
-const int WINDOW_HEIGHT = 448;
+const int WINDOW_WIDTH = 1024;
+const int WINDOW_HEIGHT = 896;
 const float ASPECT = (float)WINDOW_WIDTH / (float)WINDOW_HEIGHT;
 
 const int TILES_X = 32;
