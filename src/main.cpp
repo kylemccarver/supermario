@@ -22,6 +22,7 @@ GLFWwindow* initWindow();
 
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
+float runningTime = 0.0f;
 
 int main() {
     GLFWwindow* window = initWindow();
@@ -32,19 +33,9 @@ int main() {
 
     Renderer renderer;
     renderer.init();
-/*
-    unsigned int VBO_T;
-    glGenBuffers(1, &VBO_T);
 
-    glBindBuffer(GL_ARRAY_BUFFER, VBO_T);
-    glBufferData(GL_ARRAY_BUFFER, texCoords.size() * sizeof(vec2), &texCoords[0], GL_STATIC_DRAW);
-    
-    // texture attribute
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(1);
-*/
+    // Load texture
     int width, height, nrChannels;
-    //stbi_set_flip_vertically_on_load(true);
     unsigned char* data = stbi_load("../textures/brick.png", &width, &height, &nrChannels, 0);
 
     unsigned int texture;
@@ -61,9 +52,10 @@ int main() {
     glGenerateMipmap(GL_TEXTURE_2D);
     stbi_image_free(data);
 
+    // Bind uniforms
     shader.use();
     shader.setInt("ourTexture", 0);
-  
+
     mat4 model = mat4(1.0);
     shader.setMat4("model", model);
 
@@ -76,13 +68,17 @@ int main() {
 
     int frames = 0;
     while(!glfwWindowShouldClose(window)) {
-        if(frames >= 60) {
-            std::cout << "60 Frames Time: " << glfwGetTime() << std::endl;
-            frames = 0;
-        }
         float currentFrame = glfwGetTime();
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
+        runningTime += deltaTime;
+
+        if(runningTime >= 1.0f) {
+            std::cout << "FPS: " << float(frames) / runningTime << std::endl;
+            frames = 0;
+            runningTime = 0.0f;
+        }
+
 
         processInput(window);
         // TODO: Update camera based on player position rather than window events
@@ -129,7 +125,7 @@ GLFWwindow* initWindow() {
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // To make MacOS happy; should not be needed
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); // We don't want the old OpenGL 
 
-    GLFWwindow* window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "OpenGL", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Super Mario Bros.", NULL, NULL);
     if( window == NULL ){
         std::cout << "Failed to open GLFW window." << std::endl;
         glfwTerminate();

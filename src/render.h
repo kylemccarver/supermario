@@ -10,7 +10,8 @@ class Renderer {
         void render();
     private:
         unsigned int VAObg;
-        unsigned int VBObg;
+        unsigned int VBObg_V;
+        unsigned int VBObg_T;
 
         std::vector<glm::vec4> bgVertices;
         std::vector<glm::vec2> texCoords;

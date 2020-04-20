@@ -8,18 +8,26 @@ using namespace glm;
 
 void Renderer::init() {
     glGenVertexArrays(1, &VAObg);
-    glGenBuffers(1, &VBObg);
+    glGenBuffers(1, &VBObg_V);
+    glGenBuffers(1, &VBObg_T);
 
     glBindVertexArray(VAObg);
 
     generateBackgroundQuads(bgVertices, texCoords);
 
-    glBindBuffer(GL_ARRAY_BUFFER, VBObg);
+    // Vertex/position attribute
+    glBindBuffer(GL_ARRAY_BUFFER, VBObg_V);
     glBufferData(GL_ARRAY_BUFFER, bgVertices.size() * sizeof(vec4), &bgVertices[0], GL_STATIC_DRAW);
 
-    // position attribute
     glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0); 
+
+    // Texture attribute
+    glBindBuffer(GL_ARRAY_BUFFER, VBObg_T);
+    glBufferData(GL_ARRAY_BUFFER, texCoords.size() * sizeof(vec2), &texCoords[0], GL_STATIC_DRAW);
+
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(1);
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
